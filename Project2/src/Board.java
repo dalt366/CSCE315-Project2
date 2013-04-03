@@ -41,7 +41,7 @@ public class Board extends JPanel {
 		System.out.print(count + "\n");
 		*/
 		
-		/* DRAW PIECES */		
+		/* ASSIGN PIECE COLORS */		
 		pieces = new GamePiece[COLS][ROWS]; // total of 44 pieces & 45 spaces to move
 		
 		// top 2 rows - black
@@ -143,7 +143,7 @@ public class Board extends JPanel {
 		System.out.print(count + "\n");
 		*/
 		
-		/* DRAW PIECES */
+		/* ASSIGN PIECE COLORS */
 		pieces = new GamePiece[COLS][ROWS]; // total of 44 pieces & 45 spaces to move
 		
 		// top 2 rows - black
@@ -511,34 +511,30 @@ public class Board extends JPanel {
     
     	//System.out.printf("xMax: %d\nyMax: %d\n",xMax,yMax);
     
-    	// center pt: (325, 175)
-        
+   		/* DRAW LINES */
+   		
 		// draw horizontal lines
 		for(int y=50; y<=yMax; y+=75) {
 			Graphics2D g2 = (Graphics2D) g;
 			g2.setStroke(new BasicStroke(3));
 			g.drawLine(50,y,xMax,y);	
 		}
-		
 		// draw vertical lines
 		for(int x=50; x<=xMax; x+=75) {
 			Graphics2D g2 = (Graphics2D) g;
 			g2.setStroke(new BasicStroke(3));
 			g.drawLine(x,50,x,yMax);
 		}
-		
 		// draw diagonal lines
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setStroke(new BasicStroke(3));
 		
-				// draw lines		
-		
-		// top border
+		// top border diagonal lines
 		for(int x=pieces[0][0].getPosition().x; x<pieces[COLS-1][ROWS-1].getPosition().x; x+=150){
 			g.drawLine(x,pieces[0][0].getPosition().y, x+75,pieces[0][0].getPosition().y+75 );
 			g.drawLine(x+150,pieces[0][0].getPosition().y, x+75,pieces[0][0].getPosition().y+75 );
 		}
-		// top right
+		// top right diagonal lines
 		for(int x=pieces[COLS/2][ROWS/2].getPosition().x; x<pieces[COLS-1][ROWS-1].getPosition().x; x+=150){
 			for(int y=pieces[COLS/2][ROWS/2].getPosition().y; y>pieces[0][0].getPosition().y; y-=150){
 				g.drawLine(x,y, x+75,y+75 );
@@ -547,7 +543,7 @@ public class Board extends JPanel {
 				g.drawLine(x,y, x-75,y-75 );
 			}
 		}
-		// top left
+		// top left diagonal lines
 		for(int x=pieces[COLS/2][ROWS/2].getPosition().x; x>pieces[0][0].getPosition().x; x-=150){
 			for(int y=pieces[COLS/2][ROWS/2].getPosition().y; y>pieces[0][0].getPosition().y; y-=150){
 				g.drawLine(x,y, x+75,y+75 );
@@ -556,17 +552,17 @@ public class Board extends JPanel {
 				g.drawLine(x,y, x-75,y-75 );
 			}
 		}		
-		// left border
+		// left border diagonal lines
 		for(int y=pieces[1][1].getPosition().y; y<pieces[COLS-2][ROWS-2].getPosition().y; y+=150){
 			g.drawLine(pieces[1][1].getPosition().x,y, pieces[1][1].getPosition().x-75,y+75 );
 			g.drawLine(pieces[1][1].getPosition().x-75,y+75, pieces[1][1].getPosition().x,y+150 );
 		}	
-		// right border
+		// right border diagonal lines
 		for(int y=pieces[COLS-2][1].getPosition().y; y<pieces[COLS-2][ROWS-2].getPosition().y; y+=150){
 			g.drawLine(pieces[COLS-2][1].getPosition().x,y, pieces[COLS-2][1].getPosition().x+75,y+75 );
 			g.drawLine(pieces[COLS-2][1].getPosition().x+75,y+75, pieces[COLS-2][1].getPosition().x,y+150 );
 		}		
-		// bottom right
+		// bottom right diagonal lines
 		for(int x=pieces[COLS/2][ROWS/2].getPosition().x; x<pieces[COLS-1][ROWS-1].getPosition().x; x+=150){
 			for(int y=pieces[COLS/2][ROWS/2].getPosition().y; y<pieces[COLS-1][ROWS-1].getPosition().y; y+=150){
 				g.drawLine(x,y, x+75,y+75 );
@@ -575,7 +571,7 @@ public class Board extends JPanel {
 				g.drawLine(x,y, x-75,y-75 );
 			}
 		}
-		// bottom left
+		// bottom left diagonal lines
 		for(int x=pieces[COLS/2][ROWS/2].getPosition().x; x>pieces[0][0].getPosition().x; x-=150){
 			for(int y=pieces[COLS/2][ROWS/2].getPosition().y; y<pieces[COLS-1][ROWS-1].getPosition().y; y+=150){
 				g.drawLine(x,y, x+75,y+75 );
@@ -584,7 +580,7 @@ public class Board extends JPanel {
 				g.drawLine(x,y, x-75,y-75 );
 			}
 		}
-		// bottom border
+		// bottom border diagonal lines
 		for(int x=pieces[0][ROWS-1].getPosition().x; x<pieces[COLS-1][ROWS-1].getPosition().x; x+=150){
 			g.drawLine(x,pieces[COLS-1][ROWS-1].getPosition().y, x+75,pieces[COLS-1][ROWS-1].getPosition().y-75 );
 			g.drawLine(x+150,pieces[COLS-1][ROWS-1].getPosition().y, x+75,pieces[COLS-1][ROWS-1].getPosition().y-75 );
