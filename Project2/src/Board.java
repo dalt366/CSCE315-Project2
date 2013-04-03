@@ -14,6 +14,8 @@ public class Board extends JPanel {
 		int yPos = 50;
 		ROWS = 5;
 		COLS = 9;
+		whitePieces=(COLS*ROWS)/2 - 1;
+		blackPieces=(COLS*ROWS)/2 - 1;
 		
 		player1 = new Player(true, PieceColor.WHITE);
 		player2 = new Player(true, PieceColor.BLACK);
@@ -116,6 +118,8 @@ public class Board extends JPanel {
 		int yPos = 50;
 		ROWS = _ROWS;
 		COLS = _COLS;
+		whitePieces=(COLS*ROWS)/2 - 1;
+		blackPieces=(COLS*ROWS)/2 - 1;
 		
 		player1 = new Player(_player1.isUser(), _player1.whichColor());
 		player2 = new Player(_player2.isUser(), _player2.whichColor());
@@ -424,12 +428,14 @@ public class Board extends JPanel {
 			while((nextPosX >= 0 && nextPosX <= COLS-1) &&(nextPosY >= 0 && nextPosY <= ROWS-1)
 					&& pieces[nextPosX][nextPosY].getColor() != PieceColor.BLACK && pieces[nextPosX][nextPosY].getColor() != PieceColor.NULL){
 				pieces[nextPosX][nextPosY].setColor(PieceColor.NULL);
+				whitePieces--;
 				nextPosX = nextPosX + deltaX;
 				nextPosY = nextPosY + deltaY;
 			}
 			while((prevPosX >= 0 && prevPosX <= COLS-1) &&(prevPosY >= 0 && prevPosY <= ROWS-1)
 					&& pieces[prevPosX][prevPosY].getColor() != PieceColor.BLACK && pieces[prevPosX][prevPosY].getColor() != PieceColor.NULL){
 				pieces[prevPosX][prevPosY].setColor(PieceColor.NULL);
+				whitePieces--;
 				prevPosX = prevPosX - deltaX;
 				prevPosY = prevPosY - deltaY;
 			}
@@ -440,12 +446,14 @@ public class Board extends JPanel {
 			while((nextPosX >= 0 && nextPosX <= COLS-1) &&(nextPosY >= 0 && nextPosY <= ROWS-1)
 					&& pieces[nextPosX][nextPosY].getColor() != PieceColor.WHITE && pieces[nextPosX][nextPosY].getColor() != PieceColor.NULL){
 				pieces[nextPosX][nextPosY].setColor(PieceColor.NULL);
+				blackPieces--;
 				nextPosX = nextPosX + deltaX;
 				nextPosY = nextPosY + deltaY;
 			}
 			while((prevPosX >= 0 && prevPosX <= COLS-1) &&(prevPosY >= 0 && prevPosY <= ROWS-1)
 					&& pieces[prevPosX][prevPosY].getColor() != PieceColor.WHITE && pieces[prevPosX][prevPosY].getColor() != PieceColor.NULL){
 				pieces[prevPosX][prevPosY].setColor(PieceColor.NULL);
+				blackPieces--;
 				prevPosX = prevPosX - deltaX;
 				prevPosY = prevPosY - deltaY;
 			}
@@ -699,38 +707,19 @@ public class Board extends JPanel {
 	}
 	
 	private void doAIMove(Player ai){
-		/*System.out.println("Doing an AI Move");
-		boolean hasMoved = false;
+		System.out.println("Doing an AI Move");
 		Random rn = new Random();
-		int tries = 0;
-		while(!hasMoved && tries < 1000){
-			int aiPieceCol = rn.nextInt(COLS);
-			int aiPieceRow = rn.nextInt(ROWS);
-			if(pieces[aiPieceCol][aiPieceRow].getColor() != ai.whichColor()){
-				tries++;
-				continue;
-			}
-			if(!isMoveValid(aiPieceCol, aiPieceRow)){
-				tries++;
-				continue;
-			}
-			pieceSelectedCol = aiPieceCol;
-			pieceSelectedRow = aiPieceRow;
-			while(!hasMoved && tries < 1000){
-				int moveToCol = rn.nextInt(COLS);
-				int moveToRow = rn.nextInt(ROWS);
-				if (pieces[moveToCol][moveToRow].getColor() != PieceColor.NULL)
-					continue;
-				movePiece(pieceSelectedCol,pieceSelectedRow, moveToCol, moveToRow);
-				if(pieces[aiPieceCol][aiPieceRow].getColor() == PieceColor.NULL)
-					hasMoved = true;
-				tries++;
-			}
+		if(attackablePieces.isEmpty()){
+			moveContainer mc = movablePieces.get(rn.nextInt(movablePieces.size()));
+			movePiece(mc.source.x, mc.source.y, mc.destination.x,mc.destination.y);
 		}
-		if(tries >= 1000 && !hasMoved) updateState();
+		else{
+			moveContainer mc = attackablePieces.get(rn.nextInt(attackablePieces.size()));
+			movePiece(mc.source.x, mc.source.y, mc.destination.x,mc.destination.y);
+		}
 		pieceSelectedCol = -1;
 		pieceSelectedRow = -1;
-		repaint();*/
+		repaint();
 	}
 	
 	private void updateState(){
@@ -743,6 +732,16 @@ public class Board extends JPanel {
 		case P1_Turn:
 			if(turnCounter >= 50){
 				boardState = GameState.Tie;
+				updateState();
+				break;
+			}
+			else if(blackPieces==0){
+				boardState = GameState.P1_Won;
+				updateState();
+				break;
+			}
+			else if(whitePieces==0){
+				boardState = GameState.P2_Won;
 				updateState();
 				break;
 			}
@@ -759,15 +758,31 @@ public class Board extends JPanel {
 				updateState();
 				break;
 			}
+			else if(blackPieces==0){
+				boardState = GameState.P1_Won;
+				updateState();
+				break;
+			}
+			else if(whitePieces==0){
+				boardState = GameState.P2_Won;
+				updateState();
+				break;
+			}
 			boardState = GameState.P1_Turn;
 			updateMovablePieces();
-			System.out.println("PLayer 1 turn");
+			System.out.println("Player 1 turn");
 			if(!(player1.isUser())){
 				doAIMove(player1);
 			}
 			break;
 		case Tie:
 			JOptionPane.showMessageDialog(this, "Game tied, Please Start a new game");
+			break;
+		case P1_Won:
+			JOptionPane.showMessageDialog(this, "Player One Wins, Please Start a new game");
+			break;
+		case P2_Won:
+			JOptionPane.showMessageDialog(this, "Player Two Wins, Please Start a new game");
 			break;
 		}
 		turnCounter++;
@@ -781,6 +796,8 @@ public class Board extends JPanel {
 		public Position source;
 		public Position destination;
 	}
+	private int whitePieces;
+	private int blackPieces;
 	private GamePiece[][] pieces;
 	private ArrayList<moveContainer> movablePieces;
 	private ArrayList<moveContainer> attackablePieces;
