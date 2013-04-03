@@ -6,8 +6,8 @@ enum MOVE {FOWARD, BACK, LEFT, RIGHT, DF_RIGHT, DF_LEFT, DB_RIGHT, DB_LEFT};
 enum GameState {Init, P1_Turn, P2_Turn, P1_Won, P2_Won, Tie};
 public class Board extends JPanel {
 	public Board(){
-		/* initialize game state here; create pieces,
-		 * populate board, make players, get everything setup
+		/* initialize game state here;
+		 * create pieces, populate board, make players, etc.
 		 */
 		addMouseListener(new BoardAdapter());
 		int xPos = 50;
@@ -17,7 +17,8 @@ public class Board extends JPanel {
 		
 		player1 = new Player(true, PieceColor.WHITE);
 		player2 = new Player(true, PieceColor.BLACK);
-		
+	
+		/* INITIALIZE PIECE POSITIONS */
 		piecePositions = new Position[COLS][ROWS];	
 		
 		for(int y=0; y<ROWS; y++) {
@@ -40,6 +41,7 @@ public class Board extends JPanel {
 		System.out.print(count + "\n");
 		*/
 		
+		/* DRAW PIECES */		
 		pieces = new GamePiece[COLS][ROWS]; // total of 44 pieces & 45 spaces to move
 		
 		// top 2 rows - black
@@ -49,7 +51,6 @@ public class Board extends JPanel {
 			 	pieces[x][y] = tempPiece;
 			 }
 		 }
-		
 		// middle row - black
 		for(int x=0; x < COLS; x+=2) {
 			int y = ROWS/2;
@@ -67,7 +68,6 @@ public class Board extends JPanel {
 			 	pieces[x][y] = tempPiece;	
 			}
 		}
-		
 		// middle row - white
 		for(int x=1; x < COLS/2+1; x+=2) {
 			int y = ROWS/2;
@@ -79,37 +79,36 @@ public class Board extends JPanel {
 			GamePiece tempPiece = new GamePiece(piecePositions[x][y], PieceColor.WHITE);
 		 	pieces[x][y] = tempPiece;
 		}
-
 		// bottom 2 rows
 		for(int y=ROWS/2+1; y < ROWS; y++){
 			for(int x=0; x < COLS; x++){
 				GamePiece tempPiece = new GamePiece(piecePositions[x][y], PieceColor.WHITE);
 			 	pieces[x][y] = tempPiece;
 			 }
-		 }
-		 pieces[COLS/2][ROWS/2] = new GamePiece(piecePositions[COLS/2][ROWS/2],PieceColor.NULL);
+		}
+		// initialize center piece to NULL
+		pieces[COLS/2][ROWS/2] = new GamePiece(piecePositions[COLS/2][ROWS/2],PieceColor.NULL);
 		 
 		pieceBoardThere = new boolean[COLS][ROWS];
 
-		for (int i = 0; i < pieceBoardThere.length; i++)
-			{
-			    Arrays.fill( pieceBoardThere[i], true );
-			}
+		for(int i = 0; i < pieceBoardThere.length; i++){
+			Arrays.fill( pieceBoardThere[i], true );
+		}
 		pieceBoardThere[COLS/2][ROWS/2] = false;
-
+		
+		// initialize/update board state
 		boardState = GameState.Init;
 		turnCounter = 0;
 		updateState();
 		
-		for (int i = 0; i < 5; i++)
-		{
+		for (int i = 0; i < 5; i++){
 		    Arrays.fill( attackGridThere[i], true );
 		}
 	}
 	
 	public void newGame(int _ROWS, int _COLS, Player _player1, Player _player2){
-		/* initialize game state here; create pieces,
-		 * populate board, make players, get everything setup
+		/* create new game state here;
+		 * create pieces, populate board, make players, etc.
 		 */
 		addMouseListener(new BoardAdapter());
 		int xPos = 50;
@@ -121,6 +120,7 @@ public class Board extends JPanel {
 		player2 = new Player(_player2.isUser(), _player2.whichColor());
 		System.out.println(player2.isUser());
 		
+		/* INITIALIZE PIECE POSITIONS */
 		piecePositions = new Position[COLS][ROWS];	
 		
 		for(int y=0; y<ROWS; y++) {
@@ -143,6 +143,7 @@ public class Board extends JPanel {
 		System.out.print(count + "\n");
 		*/
 		
+		/* DRAW PIECES */
 		pieces = new GamePiece[COLS][ROWS]; // total of 44 pieces & 45 spaces to move
 		
 		// top 2 rows - black
@@ -152,7 +153,6 @@ public class Board extends JPanel {
 			 	pieces[x][y] = tempPiece;
 			 }
 		 }
-		
 		// middle row - black
 		for(int x=0; x < COLS; x+=2) {
 			int y = ROWS/2;
@@ -170,7 +170,6 @@ public class Board extends JPanel {
 			 	pieces[x][y] = tempPiece;	
 			}
 		}
-		
 		// middle row - white
 		for(int x=1; x < COLS/2+1; x+=2) {
 			int y = ROWS/2;
@@ -182,15 +181,16 @@ public class Board extends JPanel {
 			GamePiece tempPiece = new GamePiece(piecePositions[x][y], PieceColor.WHITE);
 		 	pieces[x][y] = tempPiece;
 		}
-
 		// bottom 2 rows
 		for(int y=ROWS/2+1; y < ROWS; y++){
 			for(int x=0; x < COLS; x++){
 				GamePiece tempPiece = new GamePiece(piecePositions[x][y], PieceColor.WHITE);
 			 	pieces[x][y] = tempPiece;
 			 }
-		 }
-		 pieces[COLS/2][ROWS/2] = new GamePiece(piecePositions[COLS/2][ROWS/2],PieceColor.NULL);
+		}
+		
+		// set middle piece to NULL
+		pieces[COLS/2][ROWS/2] = new GamePiece(piecePositions[COLS/2][ROWS/2],PieceColor.NULL);
 		 
 		pieceBoardThere = new boolean[COLS][ROWS];
 
@@ -200,6 +200,7 @@ public class Board extends JPanel {
 			}
 		pieceBoardThere[COLS/2][ROWS/2] = false;
 
+		// initialize/update board state
 		boardState = GameState.Init;
 		turnCounter = 0;
 		updateState();
@@ -503,14 +504,14 @@ public class Board extends JPanel {
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		int w = getWidth();
-        	int h = getHeight();
-		
-      	 	int xMax = pieces[COLS-1][ROWS-1].getPosition().x;
-       		int yMax = pieces[COLS-1][ROWS-1].getPosition().y;
-        
-        	//System.out.printf("xMax: %d\nyMax: %d\n",xMax,yMax);
-        
-        	// center pt: (325, 175)
+    	int h = getHeight();
+	
+  	 	int xMax = pieces[COLS-1][ROWS-1].getPosition().x;
+   		int yMax = pieces[COLS-1][ROWS-1].getPosition().y;
+    
+    	//System.out.printf("xMax: %d\nyMax: %d\n",xMax,yMax);
+    
+    	// center pt: (325, 175)
         
 		// draw horizontal lines
 		for(int y=50; y<=yMax; y+=75) {
